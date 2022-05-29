@@ -1,5 +1,5 @@
 # Description
-Encrypts & Decrypts all files in the same directory as the scripts with a password.
+Encrypts & decrypts all files in the same directory as the scripts with a password.
 
 # Requirements
 - An up-to-date Linux machine.
