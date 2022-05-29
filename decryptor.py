@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import shutil
 from cryptography.fernet import Fernet
 
 #Collecting the files in the current directory
@@ -8,7 +9,7 @@ from cryptography.fernet import Fernet
 files = []
 save_path = './keys'
 
-if len(os.listdir(save_path)) == 0:
+if not os.path.isdir(save_path):
     print("Files are not encrypted!")
     
 else:
@@ -45,7 +46,6 @@ else:
         for file in files:
             print(f"\t-{file}")
 
-        for file in os.listdir(save_path):
-            os.remove(os.path.join(save_path, file))
+        shutil.rmtree(save_path)
     else:
         print("Incorrect password.")

