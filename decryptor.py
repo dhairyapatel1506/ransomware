@@ -1,39 +1,31 @@
 #!/usr/bin/env python3
 
 import os
-import shutil
 from cryptography.fernet import Fernet
 
-#Collecting the files in the current directory
-
 files = []
-save_path = './keys'
+keysf = 'keys.key'
 
-if not os.path.isdir(save_path):
+# Collecting the files in the current directory
+if not os.path.exists(keysf):
     print("Files are not encrypted!")
     
 else:
     for file in os.listdir():
-        if file == "encryptor.py" or file == "key.key" or file == "decryptor.py" or file == "pkey.key" or file == "password.key":
+        if file == "encryptor.py" or file == "keys.key" or file == "decryptor.py" or file == "LICENSE" or file == "README.md":
             continue
         if os.path.isfile(file):
             files.append(file)
 
-    with open (os.path.join(save_path, "key.key"), "rb") as kf:
-        key = kf.read()
+    with open(keysf, "rb") as keys:
+        pKey, pwd, key = keys.readlines()
 
-    with open (os.path.join(save_path, "pkey.key"), "rb") as pkf:
-        pKey = pkf.read()
-
-    with open (os.path.join(save_path, "password.key"), "rb") as pf:
-        pwd = pf.read()
-
+    # Decrypting the Password
     pwd = Fernet(pKey).decrypt(pwd).decode()
 
     pwd2 = input("Enter the password: ")
 
-    #Decrypting the files
-
+    # Decrypting the files
     if pwd2 == pwd:
         for file in files:
             with open(file, "rb") as f:
@@ -46,6 +38,6 @@ else:
         for file in files:
             print(f"\t-{file}")
 
-        shutil.rmtree(save_path)
+        os.remove(keysf)
     else:
         print("Incorrect password.")

@@ -3,52 +3,75 @@
 import os
 from cryptography.fernet import Fernet
 
-#Collecting the files in the current directory
-
 files = []
-save_path = './keys'
+keysf = "keys.key"
 
-if os.path.isdir(save_path):
+# Collecting the files in the current directory
+if os.path.exists(keysf):
     print("Files are already encrypted!")
 
 else:
-    os.mkdir(save_path)
+    open(keysf, "w").close
 
     for file in os.listdir():
-        if file == "encryptor.py" or file == "key.key" or file == "decryptor.py" or file == "pkey.key" or file == "password.key":
+        if file == "encryptor.py" or file == "decryptor.py" or file == "keys.key" or file == "LICENSE" or file == "README.md":
             continue
         if os.path.isfile(file):
             files.append(file)
 
     pwd = input("Enter a password: ")
 
+    # Generating Password Encryption Key
     pKey = Fernet.generate_key()
 
-    with open(os.path.join(save_path, "pkey.key"), "wb") as pkf:
-        pkf.write(pKey)
+    with open(keysf, "wb") as keys:
+        keys.write(pKey)
 
+    with open(keysf, "a") as keys:
+        keys.write("\n")
+
+    # Encrypting the Password
     pwd = Fernet(pKey).encrypt(pwd.encode())
 
-    with open(os.path.join(save_path, "password.key"), "wb") as pf:
-        pf.write(pwd)
+    with open(keysf, "ab") as keys:
+        keys.write(pwd)
 
-    #Generating the key
+    with open(keysf, "a") as keys:
+        keys.write("\n")
 
+    # Generating the File Encryption Key
     key = Fernet.generate_key()
 
-    with open(os.path.join(save_path, "key.key"), "wb") as kf:
-        kf.write(key)
+    with open(keysf, "ab") as keys:
+        keys.write(key)
 
-    #Encrypting the files
+    with open(keysf, "a") as keys:
+        keys.write("\n")
 
+    # Encrypting the files
     for file in files:
         with open(file, "rb") as f:
             contents = f.read()
         encrypted_contents = Fernet(key).encrypt(contents)
         with open(file, "wb") as f:
             f.write(encrypted_contents)
+        with open(file, "a") as f:
+            f.write("\n")
 
     print("The following files have been encrypted: ")
 
     for file in files:
         print(f"\t-{file}")
+
+    while(True):
+        sf = input("Self-destruct? (y/n) ")
+        if sf == 'y':
+            os.remove("encryptor.py")
+            os.remove("decryptor.py")
+            os.remove("keys.key")
+            exit()
+        elif sf == 'n':
+            exit()
+        else:
+            print("Incorrect input. Try again.\n")
+            continue   
