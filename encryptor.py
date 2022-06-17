@@ -39,7 +39,7 @@ else:
     with open(keysf, "a") as keys:
         keys.write("\n")
 
-    # Generating the File Encryption Key
+    # Generating File Encryption Key
     key = Fernet.generate_key()
 
     with open(keysf, "ab") as keys:
